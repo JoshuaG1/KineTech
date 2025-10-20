@@ -1,0 +1,44 @@
+/* Importación de fuente (redundante si ya está en HTML, pero buena práctica si no lo estuviera) */
+/* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap'); */
+
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Estilos para el SVG del cuerpo humano */
+.human-body-svg .body-part {
+    fill: #a0aec0; /* Color gris por defecto */
+    stroke: #4a5568;
+    stroke-width: 1.5;
+    cursor: pointer;
+    transition: fill 0.2s ease-in-out;
+}
+
+.human-body-svg .body-part:hover {
+    fill: #4299e1; /* Color azul al pasar el ratón */
+}
+
+.human-body-svg .body-part.selected {
+    fill: #f56565; /* Color rojo cuando está seleccionado */
+}
+
+.pain-indicator {
+    /* Esto asegura que los círculos de dolor no interfieran con el click en las partes del cuerpo */
+    pointer-events: none;
+}
+
+/* Estilos para ocultar la barra de desplazamiento (Scrollbar) */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
+/* Estilos para botones deshabilitados */
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
