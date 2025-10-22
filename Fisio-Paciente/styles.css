@@ -1,0 +1,65 @@
+/* styles.css */
+
+body {
+    font-family: 'Inter', sans-serif;
+    /* Fondo azul claro y sutil para toda la aplicación */
+    background-color: #e0f2fe; /* lightBlue-100 de Tailwind */
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+#app-container {
+    background-color: #ffffff;
+    /* Sombras y bordes más suaves */
+    border-radius: 1.5rem; /* rounded-2xl */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Estilo para el SVG del cuerpo humano */
+.human-body-svg .body-part {
+    fill: #cbd5e0; /* gray-300 */
+    stroke: #a0aec0; /* gray-400 */
+    stroke-width: 1px;
+    cursor: pointer;
+    transition: fill 0.2s ease-in-out;
+}
+
+.human-body-svg .body-part:hover {
+    fill: #60a5fa; /* blue-400 */
+}
+
+.human-body-svg .body-part.selected {
+    fill: #ef4444; /* red-500 */
+    stroke: #dc2626; /* red-600 */
+    stroke-width: 1.5px;
+}
+
+.pain-indicator {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Ocultar scrollbar pero permitir scroll */
+.no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+/* Mejoras para el selector de rol (Para que el select se vea más limpio) */
+#user-role-select {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    font-size: 1.125rem; /* text-lg */
+    color: #4a5568; /* gray-700 */
+    border: 1px solid #e2e8f0; /* gray-200 */
+}
+
+#user-role-select:focus {
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5); /* ring-blue-500 */
+}
