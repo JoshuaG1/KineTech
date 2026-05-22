@@ -1,79 +1,79 @@
-# 🧍 Detección de Pose y Medición de Ángulo de Codo en Tiempo Real con Python
+# 🧍 Real-Time Pose Detection and Elbow Angle Measurement with Python
 
 [![Python Version](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/)
 [![OpenCV](https://img.shields.io/badge/OpenCV-4.x-orange.svg)](https://opencv.org/)
 [![MediaPipe](https://img.shields.io/badge/MediaPipe-0.10%2B-green.svg)](https://mediapipe.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Este proyecto de visión por computadora implementa un sistema robusto y escalable en **Python** para detectar *landmarks* (puntos de referencia corporales) en tiempo real mediante la cámara web. Utiliza la API moderna de **MediaPipe Pose Landmarker**, aplica principios de geometría vectorial para calcular dinámicamente el **ángulo cinemático del codo derecho** (Hombro - Codo - Muñeca) y realiza un volcado de datos automatizado a un archivo estructurado de **Excel (.xlsx)** utilizando la librería **openpyxl** para análisis biomecánico posterior.
+This computer vision project implements a robust and scalable system in **Python** to detect body *landmarks* in real-time using a webcam. It uses the modern **MediaPipe Pose Landmarker** API, applies principles of vector geometry to dynamically calculate the **kinematic right elbow angle** (Shoulder - Elbow - Wrist), and performs an automated data dump into a structured **Excel (.xlsx)** file using the **openpyxl** library for subsequent biomechanical analysis.
 
 ---
 
-## 📋 Índice
-1.  📌 Descripción general
-2.  🔄 Evolución del proyecto (Fases)
-3.  🧠 Fundamento matemático
-4.  🛠️ Requisitos del sistema y dependencias
+## 📋 Table of Contents
+1.  📌 Overview
+2.  🔄 Project Evolution (Phases)
+3.  🧠 Mathematical Foundation
+4.  🛠️ System Requirements and Dependencies
 
 
 ---
 
-## 1. 📌 Descripción general
+## 1. 📌 Overview
 
-El sistema captura el flujo de video en vivo de una cámara web, procesa secuencialmente cada frame a través de un canal optimizado de visión artificial, aísla los puntos anatómicos del torso y extremidades omitiendo los descriptores faciales (para mejorar la limpieza visual y eficiencia), calcula los ángulos de flexo-extensión articular y guarda el registro con una tasa de muestreo fija controlada por software.
+The system captures live video stream from a webcam, sequentially processes each frame through an optimized computer vision pipeline, isolates the anatomical points of the torso and limbs omitting facial descriptors (to improve visual clarity and efficiency), calculates joint flexion-extension angles, and saves the log with a fixed software-controlled sampling rate.
 
-**Características Clave:**
-* **Seguimiento Multi-punto:** Detección precisa de landmarks corporales en entornos variables gracias al modelo de Deep Learning integrado de MediaPipe.
-* **Procesamiento en Modo Video:** Configurado bajo el modo `RunningMode.VIDEO`, permitiendo consistencia temporal óptima entre frames sucesivos.
-* **Aislamiento Estructurado:** Filtrado explícito de la máscara facial para centrar la visualización en la biomecánica corporal pura.
-* **Persistencia Automatizada:** Almacenamiento seguro en segundo plano mediante un manejador de excepciones (`try...finally`), garantizando la preservación de los registros en Excel incluso ante salidas abruptas del programa.
-
----
-
-## 2. 🔄 Evolución del proyecto (Fases)
-
-El desarrollo del ecosistema se estructuró de manera incremental en tres fases de desarrollo modular:
-
-* **Fase 1: Configuración del Pipeline y Esqueleto Base:** Implementación inicial del lector de captura de video con OpenCV, transformación de espacio de color (`BGR` a `RGB`), inicialización asíncrona del detector de poses y renderizado básico de conexiones anatómicas principales.
-* **Fase 2: Motor Cinemático y Filtrado Visual:** Introducción de la función matemática de cálculo angular, mapeo de coordenadas normalizadas a píxeles absolutos de pantalla y exclusión estética de los landmarks de la cara (0 al 10).
-* **Fase 3: Capa de Persistencia y Logging de Datos:** Integración del objeto `Workbook` de openpyxl, sincronización temporal con marcas de tiempo relativas en segundos, establecimiento de un bucle de escritura temporizado con un intervalo constante de actualización de **0.1s** (10 Hz) y guardado resiliente de archivos.
+**Key Features:**
+* **Multi-point Tracking:** Precise detection of body landmarks in variable environments thanks to MediaPipe's integrated Deep Learning model.
+* **Video Mode Processing:** Configured under `RunningMode.VIDEO` mode, allowing optimal temporal consistency between successive frames.
+* **Structured Isolation:** Explicit filtering of the facial mask to focus the visualization on pure body biomechanics.
+* **Automated Persistence:** Secure background storage using an exception handler (`try...finally`), ensuring the preservation of Excel logs even in the event of abrupt program exits.
 
 ---
 
-## 3. 🧠 Fundamento matemático
+## 2. 🔄 Project Evolution (Phases)
 
-El cálculo del ángulo interno del codo se modela matemáticamente utilizando **álgebra lineal y geometría euclidiana** en un plano bidimensional, determinado por las coordenadas pixeladas de la imagen. 
+The ecosystem's development was structured incrementally in three modular development phases:
 
-Se definen tres puntos en el espacio correspondientes a los landmarks del lado derecho:
-* **Punto A** $(x_A,y_A)$: Hombro Derecho (`RIGHT_SHOULDER` = 12)
-* **Punto B** $(x_B,y_B)$: Codo Derecho (`RIGHT_ELBOW` = 14) $\rightarrow$ *Vértice de interés*
-* **Punto C** $(x_C,y_C)$: Muñeca Derecha (`RIGHT_WRIST` = 16)
+* **Phase 1: Pipeline Setup and Base Skeleton:** Initial implementation of the video capture reader with OpenCV, color space transformation (`BGR` to `RGB`), asynchronous initialization of the pose detector, and basic rendering of major anatomical connections.
+* **Phase 2: Kinematic Engine and Visual Filtering:** Introduction of the mathematical function for angle calculation, mapping of normalized coordinates to absolute screen pixels, and aesthetic exclusion of facial landmarks (0 to 10).
+* **Phase 3: Persistence Layer and Data Logging:** Integration of the `Workbook` object from openpyxl, temporal synchronization with relative timestamps in seconds, establishment of a timed writing loop with a constant update interval of **0.1s** (10 Hz), and resilient file saving.
 
-### 1. Construcción de vectores de posición
-Se generan dos vectores directores concurrentes orientados hacia afuera con origen común en el vértice del codo ($B$):
+---
+
+## 3. 🧠 Mathematical Foundation
+
+The calculation of the internal elbow angle is modeled mathematically using **linear algebra and Euclidean geometry** in a two-dimensional plane, determined by the pixelated coordinates of the image. 
+
+Three points in space corresponding to the right-side landmarks are defined:
+* **Point A** $(x_A,y_A)$: Right Shoulder (`RIGHT_SHOULDER` = 12)
+* **Point B** $(x_B,y_B)$: Right Elbow (`RIGHT_ELBOW` = 14) $\rightarrow$ *Vertex of interest*
+* **Point C** $(x_C,y_C)$: Right Wrist (`RIGHT_WRIST` = 16)
+
+### 1. Position Vectors Construction
+Two concurrent direction vectors oriented outwards with a common origin at the elbow vertex ($B$) are generated:
 
 $$\vec{BA} = (x_A - x_B, y_A - y_B)$$
 
 $$\vec{BC} = (x_C - x_B, y_C - y_B)$$
 
-### 2. Producto escalar (Dot Product)
-El producto escalar de ambos vectores se calcula como la suma de los productos de sus componentes ortogonales:
+### 2. Dot Product
+The dot product of both vectors is calculated as the sum of the products of their orthogonal components:
 
 $$\vec{BA} \cdot \vec{BC} = (BA_x \cdot BC_x) + (BA_y \cdot BC_y)$$
 
-### 3. Magnitudes vectoriales (Normas Euclidianas)
-Calculamos la longitud o norma lineal de cada vector mediante el teorema de Pitágoras:
+### 3. Vector Magnitudes (Euclidean Norms)
+We calculate the length or linear norm of each vector using the Pythagorean theorem:
 
 $$\|\vec{BA}\| = \sqrt{BA_x^2 + BA_y^2}$$
 
 $$\|\vec{BC}\| = \sqrt{BC_x^2 + BC_y^2}$$
 
-### 4. Cálculo del coseno y ángulo en grados
-A partir de la definición geométrica del producto escalar ($\vec{BA} \cdot \vec{BC} = \|\vec{BA}\| \|\vec{BC}\| \cos(\theta)$), despejamos el coseno del ángulo interno. Se aplica un truncamiento de seguridad dentro del rango del dominio $[-1.0, 1.0]$ para mitigar errores de redondeo de punto flotante:
+### 4. Cosine and Angle in Degrees Calculation
+From the geometric definition of the dot product ($\vec{BA} \cdot \vec{BC} = \|\vec{BA}\| \|\vec{BC}\| \cos(\theta)$), we solve for the cosine of the internal angle. A safety truncation is applied within the domain range $[-1.0, 1.0]$ to mitigate floating-point rounding errors:
 
 $$\cos(\theta) = \max\left(-1.0, \min\left(1.0, \frac{\vec{BA} \cdot \vec{BC}}{\|\vec{BA}\| \|\vec{BC}\|}\right)\right)$$
 
-Finalmente, se extrae el arcocoseno en radianes y se convierte al sistema sexagesimal (grados):
+Finally, the arccosine in radians is extracted and converted to the sexagesimal system (degrees):
 
 $$\theta_{\text{rad}} = \arccos(\cos(\theta))$$
 
@@ -81,16 +81,15 @@ $$\theta_{\text{deg}} = \theta_{\text{rad}} \times \left(\frac{180}{\pi}\right)$
 
 ---
 
-## 4. 🛠️ Requisitos del sistema y dependencias
+## 4. 🛠️ System Requirements and Dependencies
 
-* **Sistema Operativo:** Windows 10/11, macOS, o Distribuciones Linux comunes.
+* **Operating System:** Windows 10/11, macOS, or common Linux Distributions.
 * **Python Version:** `Python 3.12`.
-* **Cámara de Video:** Webcam integrada o periférica USB compatible.
+* **Video Camera:** Integrated webcam or compatible USB peripheral.
 
-**Librerías Externas Requeridas:**
-* `opencv-python`: Manejo de video y renderizado gráfico.
-* `mediapipe`: Framework de inferencia para detección de la pose.
-* `openpyxl`: Manipulación de archivos Excel sin requerir Microsoft Office.
+**Required External Libraries:**
+* `opencv-python`: Video handling and graphical rendering.
+* `mediapipe`: Inference framework for pose detection.
+* `openpyxl`: Excel file manipulation without requiring Microsoft Office.
 
 ---
-
